@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f885b7f0e07a7314baf8d7d50d554c17, type: 3}
+  m_Name: Net
+  m_EditorClassIdentifier: 
+  itemName: Net
+  icon: {fileID: 21300000, guid: 89ff36e466f53a040b03c17c5f38a37c, type: 3}
+  description: A lost or drifting fishing net that easily tangles around coral branches,
+    breaking or suffocating them. The net blocks water flow, traps small animals,
+    and creates long-term damage by preventing coral growth and settlement.
+  videoPath: 
+  worldPrefab: {fileID: 5866334743024331996, guid: 0b07903c305fa704381522383aa1ba49, type: 3}

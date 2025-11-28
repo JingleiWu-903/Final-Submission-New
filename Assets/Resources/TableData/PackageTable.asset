@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 843db238b298e4e4cb4354114750a0bb, type: 3}
+  m_Name: PackageTable
+  m_EditorClassIdentifier: 
+  Datalist:
+  - Type: 0
+    id: 0
+    name: 
+    description: 
+    image: {fileID: 0}
+  - Type: 1
+    id: 1
+    name: Garbage
+    description: After metal garbage such as aluminum cans sinks to the seabed, it
+      may be washed into the coral structure under the action of waves and currents,
+      scratching or crushing the coral skeleton and destroying the growth surface.
+      The metal and can paint and sealant slowly corrode, releasing metal ions and
+      harmful chemicals, causing chronic toxicity to corals and symbiotic algae.
+      It may also cover the surface of the coral, impeding water flow, light and
+      nutrient exchange.
+    image: {fileID: 21300000, guid: 79217e943b4682342a9bab5c3ed2f53f, type: 3}
+  - Type: 1
+    id: 2
+    name: Can
+    description: If oil barrels are damaged or residual oil leaks, petroleum and
+      chemical residues will enter the seawater and form a covering layer, blocking
+      corals from obtaining sunlight and oxygen, and destroying the normal metabolism
+      of symbiotic algae and corals. At the same time, it pollutes water quality,
+      reduces water transparency, inhibits coral growth and even causes death.
+    image: {fileID: 21300000, guid: 24919d888cbaab845bb6687d330ede7f, type: 3}
+  - Type: 1
+    id: 3
+    name: Iron
+    description: After steel or other heavy metal items sink to the seabed, as the
+      seawater corrodes, metal ions such as iron, zinc, and lead will be released,
+      changing the local water chemical environment, becoming toxic to corals and
+      symbiotic microorganisms, and interfering with mineralization and physiological
+      functions. Large pieces of metal may also physically cover the coral or bottom
+      surface, blocking light and water flow, hindering coral growth and seafloor
+      ecological exchange.
+    image: {fileID: 21300000, guid: fd68d7b5dd5fe2144aea9097d82a41d2, type: 3}
+  - Type: 1
+    id: 4
+    name: Net
+    description: Abandoned fishing nets that float or sink to the bottom can easily
+      become entangled in coral branches, coral heads or substrate structures. Entanglement
+      can compress corals, causing bone fractures and tissue necrosis. Long-term
+      presence also blocks water flow, blocks light, hinders the colonization and
+      growth of coral larvae, and traps fish and invertebrates, causing chain ecological
+      damage.
+    image: {fileID: 21300000, guid: 89ff36e466f53a040b03c17c5f38a37c, type: 3}
+  - Type: 1
+    id: 5
+    name: Finger Coral
+    description: Finger corals grow in thick, upright branches resembling short fingers.
+      Their sturdy shape helps them survive strong currents in shallow reefs. They
+      offer shelter for small fish and invertebrates and play an important role in
+      strengthening reef structure and supporting local biodiversity.
+    image: {fileID: 21300000, guid: 70c0fa9fb7d02504dbe1bf173d176904, type: 3}
+  - Type: 1
+    id: 6
+    name: Foliose Coral
+    description: Foliose corals form broad, leaf-like plates that maximize sunlight
+      for photosynthesis. Common in bright shallow waters, their layered structure
+      creates hiding spaces for small marine life. Though fragile in strong waves,
+      they greatly enhance the complexity and habitat diversity of coral reefs.
+    image: {fileID: 21300000, guid: a03e1de704c85d741b3cec3a7239da65, type: 3}
