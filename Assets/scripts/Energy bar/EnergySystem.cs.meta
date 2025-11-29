@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: bc52a5f016bd9724ca4cc30e1f12b1d6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - energySlider: {instanceID: 0}
+  - energyFullPanel: {fileID: 9133371049183735935, guid: f641d15b3c0d11e40a6252d9751acd1c, type: 3}
+  - energyBallPrefab: {instanceID: 0}
+  - player: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -3,29 +3,60 @@ using UnityEngine.UI;  // 引入UI库，使用Slider
 
 public class EnergySystem : MonoBehaviour
 {
-    public Slider energySlider;  // 能量条Slider
-    public Text energyText;      // 能量文本（显示百分比）
-    private float currentEnergy = 0f;  // 当前能量
-    private float maxEnergy = 100f;   // 最大能量
+    public Slider energySlider;    // 能量条滑块
+    public float energy = 0;       // 当前能量
+    public float maxEnergy = 100;  // 最大能量
+    public int trashCount = 0;     // 已捡到的垃圾数量
+    public int maxTrashCount = 3;  // 充能所需的垃圾数量
+    public GameObject energyFullPanel;  // 能量充满时的UI提示
 
-    void Start()
+    public GameObject energyBallPrefab;  // 能量球的预制体
+    public Transform player;  // 玩家的位置
+
+    private void Start()
     {
-        currentEnergy = 0f;  // 初始能量为0
-        energySlider.value = currentEnergy / maxEnergy;  // 设置Slider初始值
-        energyText.text = "Energy: " + Mathf.RoundToInt(currentEnergy) + "%";  // 设置初始文本
+        energySlider.value = energy / maxEnergy;
+        energyFullPanel.SetActive(false);
     }
 
     // 增加能量
     public void AddEnergy(float amount)
     {
-        currentEnergy = Mathf.Clamp(currentEnergy + amount, 0f, maxEnergy);  // 增加能量并确保不超过最大值
-        energySlider.value = currentEnergy / maxEnergy;  // 更新Slider
-        energyText.text = "Energy: " + Mathf.RoundToInt(currentEnergy) + "%";  // 更新文本
+        energy += amount;
+        if (energy > maxEnergy) energy = maxEnergy;
+
+        energySlider.value = energy / maxEnergy;
+
+        if (energy >= maxEnergy)
+        {
+            energyFullPanel.SetActive(true);  // 显示充能满的提示
+        }
     }
 
-    // 检查能量是否满
-    public bool IsEnergyFull()
+    // 按 E 发射能量球
+    private void Update()
     {
-        return currentEnergy >= maxEnergy;  // 如果能量满了，返回true
+        if (energy >= maxEnergy && Input.GetKeyDown(KeyCode.E))  // 按 E 发射能量球
+        {
+            FireEnergyBall();
+            energy = 0;  // 发射后重置能量
+            energySlider.value = energy / maxEnergy;  // 更新UI
+            energyFullPanel.SetActive(false);  // 隐藏提示
+        }
+    }
+
+    // 发射能量球
+    private void FireEnergyBall()
+    {
+        if (energyBallPrefab != null)
+        {
+            GameObject energyBall = Instantiate(energyBallPrefab, player.position + player.forward * 2, Quaternion.identity);
+            Rigidbody rb = energyBall.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(player.forward * 15f, ForceMode.VelocityChange);  // 给能量球加速度
+            }
+            Debug.Log("Energy ball fired!");
+        }
     }
 }
