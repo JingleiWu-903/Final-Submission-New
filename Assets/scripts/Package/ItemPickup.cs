@@ -28,13 +28,13 @@ public class ItemPickup : MonoBehaviour
         // 打印调试日志以确保进入了 OnMouseDown
         Debug.Log("Mouse clicked on: " + gameObject.name);
 
-        // 只有捡到垃圾时才增加能量
+        // 只有捡到垃圾时才增加能量段
         if (data.itemType == ItemData.ItemType.Trash)
         {
             EnergySystem energySystem = FindObjectOfType<EnergySystem>();
             if (energySystem != null)
             {
-                energySystem.AddEnergy(10f);  // 每次捡到垃圾增加10能量
+                energySystem.AddEnergy(1);   // 每捡一次垃圾 +1 格
             }
         }
 

@@ -3,77 +3,81 @@ using UnityEngine.UI;  // 引入UI库，使用Slider
 
 public class EnergySystem : MonoBehaviour
 {
-    public Slider energySlider;    // 能量条滑块
-    public float energy = 0;       // 当前能量
-    public float maxEnergy = 100;  // 最大能量
-    public int trashCount = 0;     // 已捡到的垃圾数量
-    public int maxTrashCount = 3;  // 充能所需的垃圾数量
-    public GameObject energyFullPanel;  // 能量充满时的UI提示
+    public Slider energySlider;         // 能量条
+    public int energy = 0;              // 当前能量（0~3）
+    public int maxEnergy = 3;           // 最大能量 = 3（捡 3 次垃圾）
 
-    public GameObject energyBallPrefab;  // 能量球的预制体
-    public Transform player;  // 玩家的位置
+    public GameObject energyFullPanel;  // 能量满时提示UI
+    public GameObject energyBallPrefab; // 能量球预制体
+    public Transform player;            // 玩家
 
     private void Start()
     {
-        energySlider.value = energy / maxEnergy;
-        energyFullPanel.SetActive(false);
-        Debug.Log("Initial Energy: " + energy);   // 初始能量日志
+        // 重要：让 Slider 变成 0~3 的整格
+        energySlider.minValue = 0;
+        energySlider.maxValue = maxEnergy;
+        energySlider.wholeNumbers = true;   // 显示为整格
+        energySlider.value = energy;
+
+        if (energyFullPanel != null)
+            energyFullPanel.SetActive(false);
+
+        Debug.Log("Initial Energy: " + energy);
     }
 
-    // 增加能量
-    public void AddEnergy(float amount)
+    // 每捡一次垃圾 +1 格能量
+    public void AddEnergy(int amount)
     {
-        if (energySlider == null)
-        {
-            Debug.LogError("❌ energySlider 没有在 Inspector 里赋值！");
-            return;
-        }
-
-        if (energyFullPanel == null)
-        {
-            Debug.LogError("❌ energyFullPanel 没有在 Inspector 里赋值！");
-            return;
-        }
-
-        // 增加能量
         energy += amount;
         if (energy > maxEnergy) energy = maxEnergy;
 
-        Debug.Log("当前能量：" + energy);
+        energySlider.value = energy;   // 更新 UI
 
-        // ⭐ 设置 Slider（不会超出 0~1）
-        energySlider.value = Mathf.Clamp(energy / maxEnergy, 0f, 1f);
+        Debug.Log("Current Energy: " + energy);
 
-        // 如果满了，显示提示 UI
-        if (energy >= maxEnergy)
+        if (energy >= maxEnergy && energyFullPanel != null)
         {
-            energyFullPanel.SetActive(true);
+            energyFullPanel.SetActive(true);   // 显示“按E发射能量球”
         }
     }
-    // 按 E 发射能量球
+
     private void Update()
     {
-        if (energy >= maxEnergy && Input.GetKeyDown(KeyCode.E))  // 按 E 发射能量球
+        // 能量满且按下 E
+        if (energy >= maxEnergy && Input.GetKeyDown(KeyCode.E))
         {
             FireEnergyBall();
-            energy = 0;  // 发射后重置能量
-            energySlider.value = energy / maxEnergy;  // 更新UI
-            energyFullPanel.SetActive(false);  // 隐藏提示
+
+            // 发射后清空能量
+            energy = 0;
+            energySlider.value = energy;
+
+            if (energyFullPanel != null)
+                energyFullPanel.SetActive(false);
         }
     }
 
     // 发射能量球
     private void FireEnergyBall()
     {
-        if (energyBallPrefab != null)
+        if (energyBallPrefab != null && player != null)
         {
-            GameObject energyBall = Instantiate(energyBallPrefab, player.position + player.forward * 2, Quaternion.identity);
+            GameObject energyBall = Instantiate(
+                energyBallPrefab,
+                player.position + player.forward * 2f,
+                Quaternion.identity);
+
             Rigidbody rb = energyBall.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddForce(player.forward * 15f, ForceMode.VelocityChange);  // 给能量球加速度
+                rb.AddForce(player.forward * 15f, ForceMode.VelocityChange);
             }
+
             Debug.Log("Energy ball fired!");
+        }
+        else
+        {
+            Debug.LogWarning("EnergyBallPrefab 或 player 没有设置！");
         }
     }
 }
