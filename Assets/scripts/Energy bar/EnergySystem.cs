@@ -1,51 +1,68 @@
-using UnityEngine;
-using UnityEngine.UI;  // ÒıÈëUI¿â£¬Ê¹ÓÃSlider
+ï»¿using UnityEngine;
+using UnityEngine.UI;  // å¼•å…¥UIåº“ï¼Œä½¿ç”¨Slider
 
 public class EnergySystem : MonoBehaviour
 {
-    public Slider energySlider;    // ÄÜÁ¿Ìõ»¬¿é
-    public float energy = 0;       // µ±Ç°ÄÜÁ¿
-    public float maxEnergy = 100;  // ×î´óÄÜÁ¿
-    public int trashCount = 0;     // ÒÑ¼ñµ½µÄÀ¬»øÊıÁ¿
-    public int maxTrashCount = 3;  // ³äÄÜËùĞèµÄÀ¬»øÊıÁ¿
-    public GameObject energyFullPanel;  // ÄÜÁ¿³äÂúÊ±µÄUIÌáÊ¾
+    public Slider energySlider;    // èƒ½é‡æ¡æ»‘å—
+    public float energy = 0;       // å½“å‰èƒ½é‡
+    public float maxEnergy = 100;  // æœ€å¤§èƒ½é‡
+    public int trashCount = 0;     // å·²æ¡åˆ°çš„åƒåœ¾æ•°é‡
+    public int maxTrashCount = 3;  // å……èƒ½æ‰€éœ€çš„åƒåœ¾æ•°é‡
+    public GameObject energyFullPanel;  // èƒ½é‡å……æ»¡æ—¶çš„UIæç¤º
 
-    public GameObject energyBallPrefab;  // ÄÜÁ¿ÇòµÄÔ¤ÖÆÌå
-    public Transform player;  // Íæ¼ÒµÄÎ»ÖÃ
+    public GameObject energyBallPrefab;  // èƒ½é‡çƒçš„é¢„åˆ¶ä½“
+    public Transform player;  // ç©å®¶çš„ä½ç½®
 
     private void Start()
     {
         energySlider.value = energy / maxEnergy;
         energyFullPanel.SetActive(false);
+        Debug.Log("Initial Energy: " + energy);   // åˆå§‹èƒ½é‡æ—¥å¿—
     }
 
-    // Ôö¼ÓÄÜÁ¿
+    // å¢åŠ èƒ½é‡
     public void AddEnergy(float amount)
     {
+        if (energySlider == null)
+        {
+            Debug.LogError("âŒ energySlider æ²¡æœ‰åœ¨ Inspector é‡Œèµ‹å€¼ï¼");
+            return;
+        }
+
+        if (energyFullPanel == null)
+        {
+            Debug.LogError("âŒ energyFullPanel æ²¡æœ‰åœ¨ Inspector é‡Œèµ‹å€¼ï¼");
+            return;
+        }
+
+        // å¢åŠ èƒ½é‡
         energy += amount;
         if (energy > maxEnergy) energy = maxEnergy;
 
-        energySlider.value = energy / maxEnergy;
+        Debug.Log("å½“å‰èƒ½é‡ï¼š" + energy);
 
+        // â­ è®¾ç½® Sliderï¼ˆä¸ä¼šè¶…å‡º 0~1ï¼‰
+        energySlider.value = Mathf.Clamp(energy / maxEnergy, 0f, 1f);
+
+        // å¦‚æœæ»¡äº†ï¼Œæ˜¾ç¤ºæç¤º UI
         if (energy >= maxEnergy)
         {
-            energyFullPanel.SetActive(true);  // ÏÔÊ¾³äÄÜÂúµÄÌáÊ¾
+            energyFullPanel.SetActive(true);
         }
     }
-
-    // °´ E ·¢ÉäÄÜÁ¿Çò
+    // æŒ‰ E å‘å°„èƒ½é‡çƒ
     private void Update()
     {
-        if (energy >= maxEnergy && Input.GetKeyDown(KeyCode.E))  // °´ E ·¢ÉäÄÜÁ¿Çò
+        if (energy >= maxEnergy && Input.GetKeyDown(KeyCode.E))  // æŒ‰ E å‘å°„èƒ½é‡çƒ
         {
             FireEnergyBall();
-            energy = 0;  // ·¢ÉäºóÖØÖÃÄÜÁ¿
-            energySlider.value = energy / maxEnergy;  // ¸üĞÂUI
-            energyFullPanel.SetActive(false);  // Òş²ØÌáÊ¾
+            energy = 0;  // å‘å°„åé‡ç½®èƒ½é‡
+            energySlider.value = energy / maxEnergy;  // æ›´æ–°UI
+            energyFullPanel.SetActive(false);  // éšè—æç¤º
         }
     }
 
-    // ·¢ÉäÄÜÁ¿Çò
+    // å‘å°„èƒ½é‡çƒ
     private void FireEnergyBall()
     {
         if (energyBallPrefab != null)
@@ -54,7 +71,7 @@ public class EnergySystem : MonoBehaviour
             Rigidbody rb = energyBall.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddForce(player.forward * 15f, ForceMode.VelocityChange);  // ¸øÄÜÁ¿Çò¼ÓËÙ¶È
+                rb.AddForce(player.forward * 15f, ForceMode.VelocityChange);  // ç»™èƒ½é‡çƒåŠ é€Ÿåº¦
             }
             Debug.Log("Energy ball fired!");
         }

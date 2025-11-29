@@ -4,9 +4,9 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - energySlider: {instanceID: 0}
+  - energySlider: {fileID: 1623630234439640084, guid: aa30b8d00ed1cac4ba6c0ae8031f43c9, type: 3}
   - energyFullPanel: {fileID: 9133371049183735935, guid: f641d15b3c0d11e40a6252d9751acd1c, type: 3}
-  - energyBallPrefab: {instanceID: 0}
+  - energyBallPrefab: {fileID: 6384122940783054258, guid: cd9de2096b5b07c40ba69a14e716832f, type: 3}
   - player: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
