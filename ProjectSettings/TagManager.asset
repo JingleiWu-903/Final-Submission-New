@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Trash
+  - LargeTrash
   layers:
   - Default
   - TransparentFX
