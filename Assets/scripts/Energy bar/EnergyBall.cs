@@ -1,56 +1,51 @@
 using UnityEngine;
 
+
 public class EnergyBall : MonoBehaviour
 {
-    public float lifeTime = 2f;      // 能量球存活时间
-    public GameObject coralPrefab;   // 掉落在场景里的珊瑚预制体
-    public ItemData coralItem;       // 珊瑚对应的 ItemData（进背包用）
+    public float lifeTime = 2f;        // 能量球存活时间
+    public GameObject coralPrefab;     // 掉落的“小珊瑚”预制体
+    public ItemData coralItem;         // 对应的珊瑚 ItemData（比如 CoralBlue）
 
     private void Start()
     {
-        // 2 秒后自动销毁能量球（防止一直存在）
+        // 2 秒后自动销毁能量球
         Destroy(gameObject, lifeTime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("EnergyBall 碰到了：" + collision.gameObject.name);
+        if (!collision.gameObject.CompareTag("LargeTrash"))
+            return;
 
-        // 只处理打到「大型垃圾 LargeTrash」的情况
-        if (collision.gameObject.CompareTag("LargeTrash"))
+        // 1. 记录碰撞点
+        Vector3 hitPos = collision.contacts[0].point;
+        Debug.Log("击中大垃圾，碰撞点：" + hitPos);
+
+        // 2. 生成可拾取的“小珊瑚”
+        if (coralPrefab != null)
         {
-            Debug.Log("能量球击中大型垃圾：" + collision.gameObject.name);
+            // 稍微浮在地面上
+            Vector3 spawnPos = hitPos + Vector3.up * 0.5f;
 
-            // 1. 删除大型垃圾
-            Destroy(collision.gameObject);
+            GameObject coral = Instantiate(coralPrefab, spawnPos, Quaternion.identity);
+            Debug.Log("生成可拾取珊瑚：" + coral.name);
 
-            // 2. 在场景中生成一块珊瑚
-            if (coralPrefab != null)
-            {
-                Instantiate(
-                    coralPrefab,
-                    collision.transform.position + Vector3.up * 0.5f,
-                    Quaternion.identity
-                );
-            }
-            else
-            {
-                Debug.LogWarning("EnergyBall 没有设置 coralPrefab！");
-            }
+            // 缩小一点
+            coral.transform.localScale *= 0.3f;
 
-            // 3. 珊瑚进入背包（使用对应的 ItemData）
-            if (coralItem != null && PackageData.Instance != null)
-            {
-                PackageData.Instance.AddItem(coralItem);
-                Debug.Log("珊瑚已进入背包：" + coralItem.itemName);
-            }
-            else
-            {
-                Debug.LogWarning("coralItem 或 PackageData.Instance 为空，无法加到背包！");
-            }
+            // 确保有拾取脚本
+            CoralPickupF pickup = coral.GetComponent<CoralPickupF>();
+            if (pickup == null)
+                pickup = coral.AddComponent<CoralPickupF>();
 
-            // 4. 删除能量球本体
-            Destroy(gameObject);
+            pickup.data = coralItem;   // 告诉它这是哪种珊瑚
         }
+
+        // 3. 大垃圾消失
+        Destroy(collision.gameObject);
+
+        // 4. 能量球也消失
+        Destroy(gameObject);
     }
 }
