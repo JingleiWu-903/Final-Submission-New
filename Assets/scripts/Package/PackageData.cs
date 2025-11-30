@@ -1,15 +1,15 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class PackageData : MonoBehaviour
 {
     public static PackageData Instance;
 
+    // èƒŒåŒ…é‡Œæ‰€æœ‰ç‰©å“
     public List<ItemData> items = new List<ItemData>();
 
     private void Awake()
     {
-        // µ¥ÀıÂß¼­£ºÈç¹û³¡¾°ÀïÒÑÓĞ Instance£¬¾ÍÏú»Ù×Ô¼º
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -23,12 +23,32 @@ public class PackageData : MonoBehaviour
     public void AddItem(ItemData item)
     {
         items.Add(item);
-        Debug.Log("Ê°È¡³É¹¦£º" + item.itemName);
+        Debug.Log("æ‹¾å–æˆåŠŸï¼š" + item.itemName);
     }
 
     public void RemoveItem(ItemData item)
     {
         items.Remove(item);
-        Debug.Log("É¾³ıÎïÆ·£º" + item.itemName);
+        Debug.Log("åˆ é™¤ç‰©å“ï¼š" + item.itemName);
+    }
+
+    // âœ… æ˜¯å¦èƒŒåŒ…ä¸­è‡³å°‘æœ‰ 1 ä¸ªæŒ‡å®š ItemData
+    public bool HasItem(ItemData target)
+    {
+        if (target == null) return false;
+        return items.Contains(target);
+    }
+
+    // âœ… æ¶ˆè€— 1 ä¸ªæŒ‡å®š ItemDataï¼ŒæˆåŠŸè¿”å› true
+    public bool RemoveOne(ItemData target)
+    {
+        if (target == null) return false;
+        if (items.Contains(target))
+        {
+            items.Remove(target);
+            Debug.Log("æ¶ˆè€— 1 ä¸ªç‰©å“ï¼š" + target.itemName);
+            return true;
+        }
+        return false;
     }
 }

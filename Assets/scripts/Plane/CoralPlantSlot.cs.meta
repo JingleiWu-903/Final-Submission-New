@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a4a8b4ed920745942b5888f441e71fe0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - coralItem: {fileID: 11400000, guid: 390d86a207d7fa94394171f498db2fe0, type: 2}
+  - greyCoral: {fileID: 8706806098879785243, guid: f2f492336ddd3604f9247e499ec38df9, type: 3}
+  - realCoral: {fileID: 8047859157270177709, guid: 3edbc752ebf914d42a3e7b669322d675, type: 3}
+  - area: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

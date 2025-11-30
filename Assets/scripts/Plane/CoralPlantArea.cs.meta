@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: cfe73653ed557c54dacb111c0ff74352
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - progressText: {fileID: 2055168569953210576, guid: dd6a040b17bd47e42b41ec04681387d1, type: 3}
+  - winPanel: {fileID: 4694211567971006791, guid: 39baa75a6ac7a0746997cff01b0b2dac, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
