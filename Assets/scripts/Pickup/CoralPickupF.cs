@@ -1,39 +1,52 @@
+﻿using System.Collections;
 using UnityEngine;
 
 public class CoralPickupF : MonoBehaviour
 {
-    public ItemData data;           // ��Ӧ��ɺ�� ItemData
-    public Transform hintUI;        // ��ʾ�õ� F UI������ռ� Canvas��
-    public float showDistance = 3f; // ��Զ��ʼ��ʾ��ʾ
-    public float pickupDistance = 2f; // ��Զ�ڿ��԰� F ʰȡ
+    public ItemData data;              // 这个珊瑚对应的 ItemData（如 CoralBlue）
+
+    [Header("提示 & 拾取距离")]
+    public float showDistance = 5f;    // 显示 F 提示的距离
+    public float pickupDistance = 5f;  // 能按 F 拾取的距离
+
+    [Header("悬浮 & 旋转效果")]
+    public float floatAmplitude = 0.2f; // 上下浮动高度
+    public float floatSpeed = 2f;       // 浮动速度
+    public float rotateSpeed = 60f;     // 旋转速度（度/秒）
+
+    [Header("吸入效果")]
+    public float absorbTime = 0.4f;     // 吸入持续时间
+    public float targetHeight = 1.2f;   // 吸到玩家身边的高度（相对玩家）
 
     private Transform player;
-    private bool isInRange = false;
+    private float baseY;
+    private bool isPickingUp = false;   // 是否正在吸入中，避免重复触发
 
     private void Start()
     {
-        // �����
+        // 找玩家（Tag = Player）
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
+        {
             player = playerObj.transform;
-
-        // ��� Inspector ��û�ֶ��� hintUI���ͳ��������������� ��HintCanvas��
-        if (hintUI == null)
-        {
-            Transform child = transform.Find("HintCanvas");
-            if (child != null)
-            {
-                hintUI = child;
-            }
-        }
-
-        if (hintUI != null)
-        {
-            hintUI.gameObject.SetActive(false);
         }
         else
         {
-            Debug.LogWarning("CoralPickupF��û���ҵ���ʾ UI��HintCanvas�������壡", this);
+            Debug.LogWarning("CoralPickupF：找不到 Tag = Player 的玩家对象！");
+        }
+
+        // 记录初始高度，让它在这个高度附近上下浮动
+        baseY = transform.position.y;
+
+        // 打印一下拿到的提示 UI 单例
+        if (PickupHintUI.Instance != null)
+        {
+            Debug.Log("CoralPickupF 绑定的提示 UI 是: " + PickupHintUI.Instance.name);
+            PickupHintUI.Instance.SetVisible(false);
+        }
+        else
+        {
+            Debug.LogWarning("CoralPickupF：场景中没有挂 PickupHintUI 的提示面板！");
         }
     }
 
@@ -41,32 +54,70 @@ public class CoralPickupF : MonoBehaviour
     {
         if (player == null) return;
 
-        float dist = Vector3.Distance(player.position, transform.position);
-        bool shouldShow = dist <= showDistance;
-        bool canPickup = dist <= pickupDistance;
+        // -------- 悬浮 + 旋转特效 --------
+        float offsetY = Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
+        Vector3 pos = transform.position;
+        pos.y = baseY + offsetY;
+        transform.position = pos;
 
-        // ������ʾ UI ����
-        if (hintUI != null)
+        transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime, Space.World);
+
+        // 吸入过程中不再处理 UI/输入
+        if (isPickingUp) return;
+
+        // -------- 计算距离，控制 UI --------
+        float dist = Vector3.Distance(transform.position, player.position);
+        bool inShowRange = dist <= showDistance;
+        bool inPickupRange = dist <= pickupDistance;
+
+        if (PickupHintUI.Instance != null)
         {
-            if (shouldShow != hintUI.gameObject.activeSelf)
-            {
-                hintUI.gameObject.SetActive(shouldShow);
-                Debug.Log("��ʾ UI ��ʾ״̬Ϊ: " + shouldShow + ", ����: " + dist.ToString("F2"));
-            }
+            PickupHintUI.Instance.SetVisible(inShowRange);
         }
 
-        // �� F ʰȡ
-        if (canPickup && Input.GetKeyDown(KeyCode.F))
+        // -------- 在可拾取范围内按 F --------
+        if (inPickupRange && Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("�� F ʰȡɺ����" + data.itemName);
-
-            // ���뱳��
-            PackageData.Instance.AddItem(data);
-
-            PackagePanel panel = FindObjectOfType<PackagePanel>();
-            if (panel != null) panel.RefreshScroll();
-
-            Destroy(gameObject);
+            StartCoroutine(PickupCoroutine());
         }
+    }
+
+    private IEnumerator PickupCoroutine()
+    {
+        isPickingUp = true;
+
+        if (PickupHintUI.Instance != null)
+            PickupHintUI.Instance.SetVisible(false);
+
+        // 禁用碰撞，避免过程中再触发其它碰撞
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = player.position + Vector3.up * targetHeight;
+
+        float t = 0f;
+        while (t < absorbTime)
+        {
+            t += Time.deltaTime;
+            float p = t / absorbTime;
+            p = p * p;  // 稍微加速一点的插值
+
+            transform.position = Vector3.Lerp(startPos, endPos, p);
+            yield return null;
+        }
+
+        // -------- 正式加入背包 --------
+        PackageData.Instance.AddItem(data);
+
+        PackagePanel panel = FindObjectOfType<PackagePanel>();
+        if (panel != null)
+        {
+            panel.RefreshScroll();
+        }
+
+        Debug.Log("按 F 拾取珊瑚进入背包：" + data.itemName);
+
+        Destroy(gameObject);
     }
 }
