@@ -15,7 +15,7 @@ public class EnergyBall : MonoBehaviour
         // 2 秒后自动销毁能量球
         Destroy(gameObject, lifeTime);
     }
-    public Vector3 coralSpawnScale = new Vector3(0.3f, 0.3f, 0.3f); // 掉落珊瑚的缩放
+    public Vector3 coralSpawnScale = new Vector3(0.25f, 0.25f, 0.25f); // 掉落珊瑚的缩放
     private void OnCollisionEnter(Collision collision)
     {
         // 只处理打到大垃圾的情况

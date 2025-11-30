@@ -83,8 +83,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _GradientOffset2: 1
-    - _GradientSmoothness2: 0.2
+    - _GradientOffset2: 1.49
+    - _GradientSmoothness2: 0.4
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

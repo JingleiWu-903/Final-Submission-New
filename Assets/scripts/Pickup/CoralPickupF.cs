@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+
 public class CoralPickupF : MonoBehaviour
 {
     public ItemData data;              // 这个珊瑚对应的 ItemData（如 CoralBlue）
@@ -38,10 +39,10 @@ public class CoralPickupF : MonoBehaviour
         // 记录初始高度，让它在这个高度附近上下浮动
         baseY = transform.position.y;
 
-        // 打印一下拿到的提示 UI 单例
+        // 检测提示 UI 单例
         if (PickupHintUI.Instance != null)
         {
-            Debug.Log("CoralPickupF 绑定的提示 UI 是: " + PickupHintUI.Instance.name);
+            Debug.Log("CoralPickupF 已检测到提示 UI: " + PickupHintUI.Instance.name);
             PickupHintUI.Instance.SetVisible(false);
         }
         else
@@ -62,20 +63,24 @@ public class CoralPickupF : MonoBehaviour
 
         transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime, Space.World);
 
-        // 吸入过程中不再处理 UI/输入
+        // 吸入过程中，不再理会 UI 和按键
         if (isPickingUp) return;
 
-        // -------- 计算距离，控制 UI --------
+        // -------- 计算距离，控制 UI & 拾取 --------
         float dist = Vector3.Distance(transform.position, player.position);
-        bool inShowRange = dist <= showDistance;
-        bool inPickupRange = dist <= pickupDistance;
+        bool inShowRange = dist <= showDistance;     // 可以显示 F 提示
+        bool inPickupRange = dist <= pickupDistance; // 可以按 F 拾取
 
+        // 控制提示 UI
         if (PickupHintUI.Instance != null)
         {
+            // 告诉 UI 现在要跟随的是这个珊瑚
+            PickupHintUI.Instance.Follow(transform);
+            // 是否显示
             PickupHintUI.Instance.SetVisible(inShowRange);
         }
 
-        // -------- 在可拾取范围内按 F --------
+        // 在可拾取范围内按 F
         if (inPickupRange && Input.GetKeyDown(KeyCode.F))
         {
             StartCoroutine(PickupCoroutine());

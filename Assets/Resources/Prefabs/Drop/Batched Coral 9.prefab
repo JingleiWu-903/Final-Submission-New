@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 1642411259658374906}
   - component: {fileID: 1642411259658374907}
   - component: {fileID: 1642411259658374909}
-  - component: {fileID: -2769195088230572482}
-  - component: {fileID: 5870267282158988825}
+  - component: {fileID: 7513729117020560899}
   m_Layer: 0
   m_Name: Batched Coral 9
   m_TagString: Untagged
@@ -31,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -111,7 +110,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300024, guid: 18aba36922f6bb241b40a57338e1b63d, type: 3}
---- !u!114 &-2769195088230572482
+--- !u!114 &7513729117020560899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,22 +123,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 390d86a207d7fa94394171f498db2fe0, type: 2}
-  hintUI: {fileID: 1451239529795920061, guid: 298766ecf260bbe4a9f65608e8a28c48, type: 3}
   showDistance: 5
+  pickupDistance: 5
+  floatAmplitude: 0.2
+  floatSpeed: 2
+  rotateSpeed: 60
   absorbTime: 0.4
   targetHeight: 1.2
---- !u!114 &5870267282158988825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1642411259658374905}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b50a596256323e48ae37f4827b06817, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  amplitude: 0.1
-  frequency: 2
-  rotateSpeed: 50

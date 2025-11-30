@@ -4,7 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - coralPrefab: {fileID: 1642411259658374905, guid: 8634f1c8761e9a441be6c5292c558337, type: 3}
+  - coralPrefab: {fileID: 1642411259658374905, guid: 3118d183de627ca458b9820d7756e156, type: 3}
   - coralItem: {fileID: 11400000, guid: 390d86a207d7fa94394171f498db2fe0, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
