@@ -140,7 +140,9 @@ public class CoralPlantArea : MonoBehaviour
         {
             if (slot != null && !slot.isPlanted)
                 return slot;
+            Debug.Log("Slot index: " + slots.IndexOf(slot));
         }
+       
         return null;
     }
 }

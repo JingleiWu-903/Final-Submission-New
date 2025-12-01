@@ -6,7 +6,7 @@ public class CoralPlantSlot : MonoBehaviour
     public GameObject greyCoral;        // 占位灰珊瑚
     public GameObject realCoral;        // 种植后的正常珊瑚
 
-    [HideInInspector] public bool isPlanted = false;
+    public bool isPlanted = false;
 
     private void Awake()
     {
