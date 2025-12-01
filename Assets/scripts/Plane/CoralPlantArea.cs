@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CoralPlantArea : MonoBehaviour
 {
     [Header("需要消耗的珊瑚 ItemData")]
-    public ItemData coralItem;          // CoralBlue (ItemData)
+    public ItemData coralItem;          // CoralBlue
 
-    [Header("范围 & 按键")]
-    public float plantDistance = 6f;    // 玩家与区域中心距离
+    [Header("按键 & 距离")]
+    public float plantDistance = 4f;    // 玩家离“某个格子”多近可以种
+    public float areaRadius = 10f;      // 玩家离整个区域多近算“在区域内”
     public KeyCode plantKey = KeyCode.P;
 
     [Header("UI 引用")]
-    public PlantAreaUIView plantAreaUI; // 说明 + 箭头 + 进度
-    public PlantHintUI pressPHint;      // P 提示
-    public GameObject winPanel;         // 胜利面板
+    public PlantAreaUIView areaUI;      // 进度 + 箭头 的大面板（PlantAreaUI）
+    public PlantHintUI plantHintUI;     // P 提示小面板（PlantHintPanel）
+    public PlantMessagePanel messageUI; // 顶部“没有珊瑚”那块（PlantMessagePanel）
+    public GameObject winPanel;         // WinPanel
 
-    [Header("种植位（按顺序 PlantCoral_1 ~ PlantCoral_9）")]
-    public List<CoralPlantSlot> slots = new List<CoralPlantSlot>();
+    [Header("所有种植位（按顺序）")]
+    public CoralPlantSlot[] slots;
 
     private Transform player;
     private int plantedCount = 0;
@@ -31,118 +32,164 @@ public class CoralPlantArea : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("CoralPlantArea：找不到 Tag = Player 的玩家对象！");
+            Debug.LogWarning("[CoralPlantArea] 找不到 Tag = Player 的玩家对象！");
         }
 
-        // 若 slots 为空，则自动从子物体里找
-        if (slots.Count == 0)
+        // 初始化格子
+        plantedCount = 0;
+        if (slots != null)
         {
-            slots.AddRange(GetComponentsInChildren<CoralPlantSlot>());
+            foreach (var s in slots)
+            {
+                if (s == null) continue;
+                s.SetArea(this);
+                if (s.isPlanted) plantedCount++;
+            }
         }
 
-        // 初始化 P 提示（先跟随区域，之后会跟随具体 slot）
-        if (pressPHint != null)
+        // 初始化进度 UI
+        if (areaUI != null)
         {
-            pressPHint.Follow(transform);
-            pressPHint.SetVisible(false);
+            areaUI.SetTarget(transform);                   // 让它跟随整个区域中心
+            areaUI.SetProgress(plantedCount, slots.Length);
+            areaUI.SetVisible(true);
         }
 
-        // 初始化 PlantAreaUI：一直显示在区域上方
-        if (plantAreaUI != null)
+        // P 提示先隐藏
+        if (plantHintUI != null)
         {
-            plantAreaUI.Follow(transform);                     // 固定在区域中心上方
-            plantAreaUI.Show(true);                            // 一直可见
-            plantAreaUI.SetProgress(0, slots.Count);
+            plantHintUI.SetVisible(false);
         }
 
-        // 胜利面板隐藏
+        // 顶部信息面板先隐藏
+        if (messageUI != null)
+        {
+            messageUI.HideInstant();
+        }
+
+        // WinPanel 先关
         if (winPanel != null)
+        {
             winPanel.SetActive(false);
+        }
     }
 
     private void Update()
     {
         if (player == null) return;
 
-        float dist = Vector3.Distance(player.position, transform.position);
-        bool inRange = dist <= plantDistance;
+        // ① 判断玩家是否在“区域附近”
+        float distToArea = Vector3.Distance(player.position, transform.position);
+        bool nearArea = distToArea <= areaRadius;
 
-        bool allPlanted = plantedCount >= slots.Count;
-        CoralPlantSlot nextSlot = GetNextEmptySlot();
+        // ② 找最近的“未种植” Slot（不限制距离，用于决定下一棵种在哪里）
+        CoralPlantSlot closest = null;
+        float closestDist = float.MaxValue;
 
-        // 处理 P 提示 —— 只要在范围内且还有位置，就让 P 挂到“下一棵灰珊瑚”旁边
-        if (pressPHint != null)
+        foreach (var s in slots)
         {
-            bool showHint = inRange && !allPlanted && nextSlot != null;
-            pressPHint.SetVisible(showHint);
+            if (s == null || s.isPlanted) continue;
 
-            if (showHint)
+            float d = Vector3.Distance(player.position, s.transform.position);
+            if (d < closestDist)
             {
-                pressPHint.Follow(nextSlot.transform);
+                closestDist = d;
+                closest = s;
             }
         }
 
-        if (!inRange || allPlanted) return;
+        // ③ 更新 P 提示 UI：必须在区域内 + 最近格子距离玩家不超过 plantDistance
+        bool canShowHint = nearArea && closest != null && closestDist <= plantDistance;
 
-        // 在范围内按 P 尝试种植一棵
+        if (plantHintUI != null)
+        {
+            if (canShowHint)
+            {
+                plantHintUI.SetTarget(closest.transform);
+                plantHintUI.SetVisible(true);
+            }
+            else
+            {
+                plantHintUI.SetVisible(false);
+            }
+        }
+
+        // ④ 处理按键 P
         if (Input.GetKeyDown(plantKey))
         {
-            TryPlantOne();
+            // 玩家离区域太远：啥也不干
+            if (!nearArea)
+                return;
+
+            // 背包里没有这种珊瑚
+            if (!PackageData.Instance.HasItem(coralItem))
+            {
+                if (messageUI != null)
+                {
+                    string msg = (plantedCount == 0)
+                        ? "你的背包里没有珊瑚！"
+                        : "你的背包里没有多余的珊瑚了！";
+
+                    messageUI.ShowMessage(msg);
+                }
+                return;
+            }
+
+            // 有珊瑚，但所有位置都种完了
+            if (closest == null)
+            {
+                if (messageUI != null)
+                    messageUI.ShowMessage("这里已经种满珊瑚了！");
+                return;
+            }
+
+            // 消耗 1 个珊瑚并种在最近的格子
+            if (PackageData.Instance.ConsumeItem(coralItem))
+            {
+                closest.Plant();
+            }
         }
     }
 
-    /// <summary>尝试种下一棵珊瑚</summary>
-    private void TryPlantOne()
+    // ✅ 被 CoralPlantSlot 调用：有一棵种好了
+    public void NotifyPlanted(CoralPlantSlot slot)
     {
-        if (PackageData.Instance == null)
-        {
-            Debug.LogWarning("CoralPlantArea：没有 PackageData.Instance！");
-            return;
-        }
-
-        // 消耗 1 个 CoralBlue
-        if (!PackageData.Instance.ConsumeItem(coralItem))
-        {
-            Debug.Log("CoralPlantArea：背包里没有可种的珊瑚。");
-            return;
-        }
-
-        CoralPlantSlot targetSlot = GetNextEmptySlot();
-        if (targetSlot == null)
-        {
-            Debug.Log("CoralPlantArea：已经没有空的种植位了。");
-            return;
-        }
-
-        targetSlot.SetPlanted(true);
         plantedCount++;
 
-        Debug.Log($"在种植位 {targetSlot.name} 种下了一颗珊瑚，现在已种 {plantedCount}/{slots.Count}");
-
-        if (plantAreaUI != null)
+        if (areaUI != null)
         {
-            plantAreaUI.SetProgress(plantedCount, slots.Count);
+            areaUI.SetProgress(plantedCount, slots.Length);
         }
 
-        if (plantedCount >= slots.Count)
-        {
-            // 种满 -> 关掉提示 & 显示胜利
-            if (pressPHint != null) pressPHint.SetVisible(false);
-            if (plantAreaUI != null) plantAreaUI.Show(false);
-            if (winPanel != null) winPanel.SetActive(true);
-        }
-    }
+        Debug.Log($"[CoralPlantArea] 已种植数量: {plantedCount}/{slots.Length}");
 
-    /// <summary>找到下一个“还没种”的 slot（按列表顺序）</summary>
-    private CoralPlantSlot GetNextEmptySlot()
-    {
-        foreach (var slot in slots)
+        // 全部种完
+        if (plantedCount >= slots.Length)
         {
-            if (slot != null && !slot.isPlanted)
-                return slot;
-            Debug.Log("Slot index: " + slots.IndexOf(slot));
+            // 关闭 P 提示和进度 UI
+            if (plantHintUI != null)
+                plantHintUI.SetVisible(false);
+
+            if (areaUI != null)
+                areaUI.SetVisible(false);
+
+            // 弹出胜利面板
+            if (winPanel != null)
+            {
+                winPanel.SetActive(true);
+            }
+            else
+            {
+                Debug.LogWarning("[CoralPlantArea] WinPanel 没有在 Inspector 里拖引用！");
+            }
+
+            // 顺便给一条提示文字（可选）
+            if (messageUI != null)
+            {
+                messageUI.ShowMessage("你修复了这片珊瑚礁！");
+            }
+
+            Debug.Log("[CoralPlantArea] 已种完所有珊瑚，胜利！");
         }
-       
-        return null;
     }
 }

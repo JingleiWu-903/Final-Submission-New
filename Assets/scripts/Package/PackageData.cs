@@ -31,20 +31,28 @@ public class PackageData : MonoBehaviour
         Debug.Log("删除物品：" + item.itemName);
     }
 
-    /// <summary>
-    /// 从背包里“消耗”1 个指定 ItemData，成功返回 true。
-    /// </summary>
+    // ✅ 是否有某个物品
+    public bool HasItem(ItemData item)
+    {
+        foreach (var i in items)
+        {
+            if (i == item) return true;
+        }
+        return false;
+    }
+
+    // ✅ 消耗一个物品（种植用）
     public bool ConsumeItem(ItemData item)
     {
-        int index = items.FindIndex(i => i == item);
-        if (index >= 0)
+        for (int i = 0; i < items.Count; i++)
         {
-            items.RemoveAt(index);
-            Debug.Log("消耗 1 个：" + item.itemName);
-            return true;
+            if (items[i] == item)
+            {
+                items.RemoveAt(i);
+                Debug.Log("消耗物品：" + item.itemName);
+                return true;
+            }
         }
-
-        Debug.Log("背包里没有可以消耗的：" + item.itemName);
         return false;
     }
 }

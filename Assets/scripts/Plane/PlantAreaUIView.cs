@@ -3,62 +3,52 @@ using TMPro;
 
 public class PlantAreaUIView : MonoBehaviour
 {
-    [Header("显示进度的 Text（整块 UI 里那行带 0/9 的文本）")]
-    public TMP_Text progressText;
+    public Transform target;                       // 一般拖 CoralPlantArea
+    public Vector3 worldOffset = new Vector3(0, 3f, 0);
+    public Vector2 screenOffset = Vector2.zero;
+    public TextMeshProUGUI progressText;           // 0/9 文字
 
-    [Header("前缀文字（写你要的说明）")]
-    [TextArea]
-    public string prefix = "在这里种植珊瑚：";
-
-    [Header("跟随设置")]
-    public Transform target;                 // 一般就是 CoralPlantArea
-    public Vector3 worldOffset = new Vector3(0, 2.5f, 0); // 在区域上方
-    public Vector3 screenOffset = Vector3.zero;
-
-    [Header("上下浮动")]
-    public float floatAmplitude = 0.2f; // 浮动高度（世界坐标）
-    public float floatSpeed = 1.5f;     // 浮动速度
+    [Header("上下浮动效果")]
+    public float floatAmplitude = 0.3f;            // 浮动高度
+    public float floatSpeed = 1.0f;                // 浮动速度
 
     private Camera cam;
-    private float baseOffsetY;
 
     private void Awake()
     {
         cam = Camera.main;
-        baseOffsetY = worldOffset.y;
+    }
+
+    public void SetTarget(Transform t)
+    {
+        target = t;
+    }
+
+    public void SetProgress(int planted, int total)
+    {
+        if (progressText != null)
+        {
+            progressText.text = $"{planted} / {total}";
+        }
+    }
+
+    public void SetVisible(bool visible)
+    {
+        gameObject.SetActive(visible);
     }
 
     private void LateUpdate()
     {
         if (target == null || cam == null) return;
 
-        // 在世界空间里上下浮动一点
-        Vector3 wo = worldOffset;
-        wo.y = baseOffsetY + Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
+        // 计算上下浮动的偏移
+        float hover = Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
 
-        Vector3 worldPos = target.position + wo;
+        Vector3 worldPos = target.position + worldOffset + new Vector3(0, hover, 0);
         Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
 
-        transform.position = screenPos + screenOffset;
-    }
+        if (screenPos.z < 0f) return;
 
-    /// <summary>更新进度显示：前缀 + 当前/总数</summary>
-    public void SetProgress(int current, int total)
-    {
-        if (progressText != null)
-        {
-            progressText.text = $"{prefix}{current} / {total}";
-        }
-    }
-
-    /// <summary>设置要跟随的目标（在 CoralPlantArea 里调用）</summary>
-    public void Follow(Transform t)
-    {
-        target = t;
-    }
-
-    public void Show(bool show)
-    {
-        gameObject.SetActive(show);
+        transform.position = screenPos + (Vector3)screenOffset;
     }
 }
