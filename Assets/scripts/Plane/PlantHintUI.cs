@@ -2,38 +2,42 @@ using UnityEngine;
 
 public class PlantHintUI : MonoBehaviour
 {
-    public static PlantHintUI Instance;
+    [Header("要跟随的目标（由 CoralPlantArea 设置）")]
+    public Transform target;
 
-    public Vector3 worldOffset = new Vector3(0.2f, 0.7f, 0f); // UI 相对种植位的偏移
-    private RectTransform rt;
+    [Header("世界空间偏移（让 P 在珊瑚侧面或上方一点）")]
+    public Vector3 worldOffset = new Vector3(0.4f, 1.0f, 0);
+
+    [Header("屏幕空间微调")]
+    public Vector3 screenOffset = Vector3.zero;
+
     private Camera cam;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        rt = GetComponent<RectTransform>();
         cam = Camera.main;
-        gameObject.SetActive(false);
     }
 
-    /// <summary>让 P 提示跟随某个世界坐标</summary>
-    public void Follow(Transform target)
+    private void LateUpdate()
     {
+        if (!gameObject.activeSelf) return;
         if (target == null || cam == null) return;
 
         Vector3 worldPos = target.position + worldOffset;
         Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
-        rt.position = screenPos;
+
+        transform.position = screenPos + screenOffset;
     }
 
-    public void SetVisible(bool visible)
+    /// <summary>由 CoralPlantArea 调用，设置跟随目标</summary>
+    public void Follow(Transform t)
     {
-        gameObject.SetActive(visible);
+        target = t;
+    }
+
+    /// <summary>由 CoralPlantArea 调用，控制显示隐藏</summary>
+    public void SetVisible(bool v)
+    {
+        gameObject.SetActive(v);
     }
 }

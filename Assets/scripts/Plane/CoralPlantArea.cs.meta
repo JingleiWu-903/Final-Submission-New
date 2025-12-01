@@ -4,6 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
+  - coralItem: {fileID: 11400000, guid: 390d86a207d7fa94394171f498db2fe0, type: 2}
   - progressText: {fileID: 2055168569953210576, guid: dd6a040b17bd47e42b41ec04681387d1, type: 3}
   - winPanel: {fileID: 4694211567971006791, guid: 39baa75a6ac7a0746997cff01b0b2dac, type: 3}
   executionOrder: 0

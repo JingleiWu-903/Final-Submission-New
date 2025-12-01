@@ -5,7 +5,6 @@ public class PackageData : MonoBehaviour
 {
     public static PackageData Instance;
 
-    // 背包里所有物品
     public List<ItemData> items = new List<ItemData>();
 
     private void Awake()
@@ -32,23 +31,20 @@ public class PackageData : MonoBehaviour
         Debug.Log("删除物品：" + item.itemName);
     }
 
-    // ✅ 是否背包中至少有 1 个指定 ItemData
-    public bool HasItem(ItemData target)
+    /// <summary>
+    /// 从背包里“消耗”1 个指定 ItemData，成功返回 true。
+    /// </summary>
+    public bool ConsumeItem(ItemData item)
     {
-        if (target == null) return false;
-        return items.Contains(target);
-    }
-
-    // ✅ 消耗 1 个指定 ItemData，成功返回 true
-    public bool RemoveOne(ItemData target)
-    {
-        if (target == null) return false;
-        if (items.Contains(target))
+        int index = items.FindIndex(i => i == item);
+        if (index >= 0)
         {
-            items.Remove(target);
-            Debug.Log("消耗 1 个物品：" + target.itemName);
+            items.RemoveAt(index);
+            Debug.Log("消耗 1 个：" + item.itemName);
             return true;
         }
+
+        Debug.Log("背包里没有可以消耗的：" + item.itemName);
         return false;
     }
 }
