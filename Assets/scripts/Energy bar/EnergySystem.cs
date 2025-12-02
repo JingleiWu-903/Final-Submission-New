@@ -15,8 +15,8 @@ public class EnergySystem : MonoBehaviour
     public Transform player;           // 玩家 Transform
 
     [Header("能量球发射参数")]
-    public float shootForce = 8f;      // 初速度
-    public float upwardFactor = 0.3f;  // 向上抬头的比例
+    public float shootForce = 7f;      // 初速度
+    public float upwardFactor = 0.05f;  // 向上抬头的比例
 
     private void Start()
     {
