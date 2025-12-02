@@ -127,19 +127,11 @@ public class CoralPlantArea : MonoBehaviour
                 if (messageUI != null)
                 {
                     string msg = (plantedCount == 0)
-                        ? "你的背包里没有珊瑚！"
-                        : "你的背包里没有多余的珊瑚了！";
+                        ? "There are no corals in your backpack!"
+                        : "There are no corals in your backpack anymore!";
 
                     messageUI.ShowMessage(msg);
                 }
-                return;
-            }
-
-            // 有珊瑚，但所有位置都种完了
-            if (closest == null)
-            {
-                if (messageUI != null)
-                    messageUI.ShowMessage("这里已经种满珊瑚了！");
                 return;
             }
 
@@ -151,7 +143,7 @@ public class CoralPlantArea : MonoBehaviour
         }
     }
 
-    // ✅ 被 CoralPlantSlot 调用：有一棵种好了
+    //  被 CoralPlantSlot 调用：有一棵种好了
     public void NotifyPlanted(CoralPlantSlot slot)
     {
         plantedCount++;
@@ -183,10 +175,10 @@ public class CoralPlantArea : MonoBehaviour
                 Debug.LogWarning("[CoralPlantArea] WinPanel 没有在 Inspector 里拖引用！");
             }
 
-            // 顺便给一条提示文字（可选）
+            // 顺便给一条提示文字
             if (messageUI != null)
             {
-                messageUI.ShowMessage("你修复了这片珊瑚礁！");
+                messageUI.ShowMessage("You have repaired this coral reef!");
             }
 
             Debug.Log("[CoralPlantArea] 已种完所有珊瑚，胜利！");
