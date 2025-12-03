@@ -113,7 +113,14 @@ public class PackagePanel : MonoBehaviour
 
     public void TogglePanel()
     {
-        gameObject.SetActive(!gameObject.activeSelf);
+        bool newState = !gameObject.activeSelf;
+        gameObject.SetActive(newState);
+
+        if (newState)
+            CursorManager.Instance.UnlockCursor();
+
+        else
+            CursorManager.Instance.LockCursor();
     }
 
     private void OnClickInfo()

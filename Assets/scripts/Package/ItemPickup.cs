@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using static ItemData;
-
 
 public class ItemPickup : MonoBehaviour
 {
@@ -11,7 +9,6 @@ public class ItemPickup : MonoBehaviour
 
     private void Awake()
     {
-        // 物品生成后延迟一段时间才可以拾取
         StartCoroutine(EnablePickupAfterDelay(0.3f));
     }
 
@@ -21,36 +18,42 @@ public class ItemPickup : MonoBehaviour
         canBePicked = true;
     }
 
-    private void OnMouseDown()
+    // ----------- 对外开放可调用的拾取函数 -----------
+    public void Pickup()
     {
         if (!canBePicked) return;
 
-        // 打印调试日志以确保进入了 OnMouseDown
-        Debug.Log("Mouse clicked on: " + gameObject.name);
+        Debug.Log("<color=yellow>Pickup() 被调用: " + gameObject.name + "</color>");
 
-        // 只有捡到垃圾时才增加能量段
+        // 如果是垃圾 → 加能量段
         if (data.itemType == ItemData.ItemType.Trash)
         {
-            EnergySystem energySystem = FindObjectOfType<EnergySystem>();
+            var energySystem = FindFirstObjectByType<EnergySystem>();
             if (energySystem != null)
             {
-                energySystem.AddEnergy(1);   // 每捡一次垃圾 +1 格
+                energySystem.AddEnergy(1);
             }
         }
 
-        // 将物品加入背包
+        // 加入背包
         PackageData.Instance.AddItem(data);
 
-        // 刷新背包界面
-        PackagePanel panel = FindObjectOfType<PackagePanel>();
+        // 刷新UI
+        var panel = FindFirstObjectByType<PackagePanel>();
         if (panel != null)
         {
             panel.RefreshScroll();
         }
 
-        // 销毁物体（拾取后消失）
+        // 隐藏物体
         gameObject.SetActive(false);
 
-        Debug.Log("<color=green>拾取成功: " + data.itemName + "</color>");
+        Debug.Log("<color=green>拾取成功：" + data.itemName + "</color>");
+    }
+
+    // ----------- 鼠标点击（Unity 自动调用）------------
+    private void OnMouseDown()
+    {
+        Pickup(); // 点击直接调用
     }
 }
