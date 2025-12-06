@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f885b7f0e07a7314baf8d7d50d554c17, type: 3}
   m_Name: Net
   m_EditorClassIdentifier: 
+  itemType: 0
   itemName: Net
   icon: {fileID: 21300000, guid: 89ff36e466f53a040b03c17c5f38a37c, type: 3}
   description: A lost or drifting fishing net that easily tangles around coral branches,
     breaking or suffocating them. The net blocks water flow, traps small animals,
     and creates long-term damage by preventing coral growth and settlement.
-  videoPath: 
-  worldPrefab: {fileID: 5866334743024331996, guid: 0b07903c305fa704381522383aa1ba49, type: 3}
+  videoClip: {fileID: 32900000, guid: 5273fa6cdb49d8b488a011962b6471d6, type: 3}
+  imagePreview: {fileID: 0}
+  worldPrefab: {fileID: 8515291467512348644, guid: ca2d7b2339016654ca71723293ffb37e, type: 3}

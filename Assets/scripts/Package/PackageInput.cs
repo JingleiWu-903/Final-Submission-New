@@ -5,6 +5,7 @@ public class PackageInput : MonoBehaviour
     public PackagePanel panel;
     private CursorManager cursor;
 
+
     void Start()
     {
         cursor = FindAnyObjectByType<CursorManager>();
@@ -27,4 +28,17 @@ public class PackageInput : MonoBehaviour
             }
         }
     }
+
+    public bool IsPanelOpen()
+    {
+        if (panel == null) return false;
+        return panel.gameObject.activeSelf;
+    }
+
+    public void OpenPanel()
+    {
+        panel.gameObject.SetActive(true);
+        cursor.UnlockCursor();
+    }
+
 }

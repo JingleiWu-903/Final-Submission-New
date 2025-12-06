@@ -139,8 +139,15 @@ public class PackagePanel : MonoBehaviour
 
         if (currentItem != null && videoPlayer != null)
         {
-            videoPlayer.url = currentItem.videoPath;
-            videoPlayer.Play();
+            if (currentItem.videoClip != null)
+            {
+                videoPlayer.clip = currentItem.videoClip;  // ← 不用路径，直接用 VideoClip
+                videoPlayer.Play();
+            }
+            else
+            {
+                Debug.LogWarning("当前物品没有视频视频（videoClip 未设置）");
+            }
         }
     }
 }

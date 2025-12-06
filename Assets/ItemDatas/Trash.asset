@@ -18,5 +18,6 @@ MonoBehaviour:
   description: A discarded aluminum can that can scrape or break coral surfaces when
     moved by waves. As it corrodes, it releases metal particles and chemicals that
     stress coral tissue, reduce water quality, and harm nearby marine life.
-  videoPath: 
+  videoClip: {fileID: 32900000, guid: b4dab7f69c9c67c4693a3afd642ee183, type: 3}
+  imagePreview: {fileID: 0}
   worldPrefab: {fileID: 7036073714277041206, guid: 5455baf9c2fb5bd449d57996cf979a66, type: 3}

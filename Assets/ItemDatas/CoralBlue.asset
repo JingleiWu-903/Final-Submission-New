@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f885b7f0e07a7314baf8d7d50d554c17, type: 3}
   m_Name: CoralBlue
   m_EditorClassIdentifier: 
+  itemType: 0
   itemName: Foliose Coral
   icon: {fileID: 21300000, guid: a03e1de704c85d741b3cec3a7239da65, type: 3}
   description: A coral that forms wide, layered plates resembling leaves. Its broad
     surfaces capture sunlight efficiently for photosynthesis. The overlapping structure
     creates micro-habitats for small reef creatures and adds important vertical complexity
     to coral ecosystems.
+  videoClip: {fileID: 0}
+  imagePreview: {fileID: 21300000, guid: c39679d739d72da4796c58a3bdb4af0a, type: 3}
+  worldPrefab: {fileID: 0}
