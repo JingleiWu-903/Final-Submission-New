@@ -5,13 +5,13 @@ public class PickupHintUI : MonoBehaviour
 {
     public static PickupHintUI Instance;
 
-    [Header("跟随目标（物体）")]
+    [Header("Follow the target (object)")]
     public Transform followTarget;
 
-    [Header("世界坐标偏移")]
+    [Header("World coordinate offset")]
     public Vector3 worldOffset = new Vector3(0f, 0.3f, 0f);
 
-    [Header("屏幕像素偏移")]
+    [Header("Screen pixel offset")]
     public Vector2 screenOffset = new Vector2(0f, -60f);
 
     private Camera cam;
@@ -29,7 +29,7 @@ public class PickupHintUI : MonoBehaviour
         cam = Camera.main;
         rect = GetComponent<RectTransform>();
 
-        gameObject.SetActive(false); // 初始隐藏
+        gameObject.SetActive(false); //Initially hidden
     }
 
     private void LateUpdate()
@@ -37,27 +37,27 @@ public class PickupHintUI : MonoBehaviour
         if (followTarget == null || cam == null)
             return;
 
-        // 世界坐标 + 偏移
+        //World coordinates + offset
         Vector3 worldPos = followTarget.position + worldOffset;
 
-        // 世界坐标转屏幕
+        // World coordinate to screen coordinate transformation
         Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
 
-        // 背后情况，不显示
+        //The background information is not displayed
         if (screenPos.z < 0)
         {
             gameObject.SetActive(false);
             return;
         }
 
-        // 加屏幕偏移
+        // Add screen offset
         screenPos += new Vector3(screenOffset.x, screenOffset.y, 0f);
 
         rect.position = screenPos;
     }
 
     /// <summary>
-    /// 设置跟随目标
+    /// Set the target to follow
     /// </summary>
     public void Follow(Transform target)
     {
@@ -65,7 +65,7 @@ public class PickupHintUI : MonoBehaviour
     }
 
     /// <summary>
-    /// 显示或隐藏 UI
+    /// Show or hide the UI
     /// </summary>
     public void SetVisible(bool visible)
     {

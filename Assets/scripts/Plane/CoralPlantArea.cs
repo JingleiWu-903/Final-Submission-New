@@ -2,21 +2,21 @@
 
 public class CoralPlantArea : MonoBehaviour
 {
-    [Header("需要消耗的珊瑚 ItemData")]
+    [Header("Coral required for consumption ItemData")]
     public ItemData coralItem;          // CoralBlue
 
-    [Header("按键 & 距离")]
-    public float plantDistance = 4f;    // 玩家离“某个格子”多近可以种
-    public float areaRadius = 10f;      // 玩家离整个区域多近算“在区域内”
+    [Header("Buttons & Distance")]
+    public float plantDistance = 5f;    // How close to a certain square can a player be to plant
+    public float areaRadius = 12f;      // How close to the entire area does a player need to be to be considered "within the area"
     public KeyCode plantKey = KeyCode.P;
 
-    [Header("UI 引用")]
-    public PlantAreaUIView areaUI;      // 进度 + 箭头 的大面板（PlantAreaUI）
-    public PlantHintUI plantHintUI;     // P 提示小面板（PlantHintPanel）
-    public PlantMessagePanel messageUI; // 顶部“没有珊瑚”那块（PlantMessagePanel）
+    [Header("UI reference")]
+    public PlantAreaUIView areaUI;      // A large panel (PlantAreaUI) with progress and arrows
+    public PlantHintUI plantHintUI;     // Plant Hint Panel (PlantHintPanel)
+    public PlantMessagePanel messageUI; // The "No Coral" section at the top (PlantMessagePanel)
     public GameObject winPanel;         // WinPanel
 
-    [Header("所有种植位（按顺序）")]
+    [Header("All planting positions (in sequence)")]
     public CoralPlantSlot[] slots;
 
     private Transform player;
@@ -24,7 +24,7 @@ public class CoralPlantArea : MonoBehaviour
 
     private void Start()
     {
-        // 找玩家
+        // Find players
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
@@ -32,10 +32,10 @@ public class CoralPlantArea : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[CoralPlantArea] 找不到 Tag = Player 的玩家对象！");
+            Debug.LogWarning("[CoralPlantArea] The player object with Tag = Player cannot be found!");
         }
 
-        // 初始化格子
+        // Initialize the grid
         plantedCount = 0;
         if (slots != null)
         {
@@ -47,27 +47,27 @@ public class CoralPlantArea : MonoBehaviour
             }
         }
 
-        // 初始化进度 UI
+        // Initialize progress UI
         if (areaUI != null)
         {
-            areaUI.SetTarget(transform);                   // 让它跟随整个区域中心
+            areaUI.SetTarget(transform);                   // Let it follow the center of the entire area
             areaUI.SetProgress(plantedCount, slots.Length);
             areaUI.SetVisible(true);
         }
 
-        // P 提示先隐藏
+        // P Prompt to hide first
         if (plantHintUI != null)
         {
             plantHintUI.SetVisible(false);
         }
 
-        // 顶部信息面板先隐藏
+        // The top information panel is hidden first
         if (messageUI != null)
         {
             messageUI.HideInstant();
         }
 
-        // WinPanel 先关
+        //WinPanel is closed
         if (winPanel != null)
         {
             winPanel.SetActive(false);
@@ -78,11 +78,11 @@ public class CoralPlantArea : MonoBehaviour
     {
         if (player == null) return;
 
-        // ① 判断玩家是否在“区域附近”
+        // Determine whether the player is "near the area"
         float distToArea = Vector3.Distance(player.position, transform.position);
         bool nearArea = distToArea <= areaRadius;
 
-        // ② 找最近的“未种植” Slot（不限制距离，用于决定下一棵种在哪里）
+        //Find the nearest "unplanted" slot (without distance restrictions, to determine where the next one should be planted)
         CoralPlantSlot closest = null;
         float closestDist = float.MaxValue;
 
@@ -98,7 +98,7 @@ public class CoralPlantArea : MonoBehaviour
             }
         }
 
-        // ③ 更新 P 提示 UI：必须在区域内 + 最近格子距离玩家不超过 plantDistance
+        // ③Update the P prompt UI: It must be within the area and the nearest grid's distance to the player should not exceed plantDistance
         bool canShowHint = nearArea && closest != null && closestDist <= plantDistance;
 
         if (plantHintUI != null)
@@ -114,14 +114,14 @@ public class CoralPlantArea : MonoBehaviour
             }
         }
 
-        // ④ 处理按键 P
+        // ④ Press key P to handle
         if (Input.GetKeyDown(plantKey))
         {
-            // 玩家离区域太远：啥也不干
+            //Player is too far from the area: Do nothing
             if (!nearArea)
                 return;
 
-            // 背包里没有这种珊瑚
+            // There is no coral in the backpack
             if (!PackageData.Instance.HasItem(coralItem))
             {
                 if (messageUI != null)
@@ -135,7 +135,7 @@ public class CoralPlantArea : MonoBehaviour
                 return;
             }
 
-            // 消耗 1 个珊瑚并种在最近的格子
+            // Consume 1 coral and plant it in the nearest cell
             if (PackageData.Instance.ConsumeItem(coralItem))
             {
                 closest.Plant();
@@ -143,7 +143,7 @@ public class CoralPlantArea : MonoBehaviour
         }
     }
 
-    //  被 CoralPlantSlot 调用：有一棵种好了
+    //  Called by CoralPlantSlot: One has been planted
     public void NotifyPlanted(CoralPlantSlot slot)
     {
         plantedCount++;
@@ -153,35 +153,35 @@ public class CoralPlantArea : MonoBehaviour
             areaUI.SetProgress(plantedCount, slots.Length);
         }
 
-        Debug.Log($"[CoralPlantArea] 已种植数量: {plantedCount}/{slots.Length}");
+        Debug.Log($"[CoralPlantArea] Planted quantity: {plantedCount}/{slots.Length}");
 
-        // 全部种完
+        // All planted
         if (plantedCount >= slots.Length)
         {
-            // 关闭 P 提示和进度 UI
+            // Turn off P prompt and progress UI
             if (plantHintUI != null)
                 plantHintUI.SetVisible(false);
 
             if (areaUI != null)
                 areaUI.SetVisible(false);
 
-            // 弹出胜利面板
+            // Pop up the victory panel
             if (winPanel != null)
             {
                 winPanel.SetActive(true);
             }
             else
             {
-                Debug.LogWarning("[CoralPlantArea] WinPanel 没有在 Inspector 里拖引用！");
+                Debug.LogWarning("[CoralPlantArea]The WinPanel has no reference dragged in the Inspector!");
             }
 
-            // 顺便给一条提示文字
+            // Please provide the text you would like translated
             if (messageUI != null)
             {
                 messageUI.ShowMessage("You have repaired this coral reef!");
             }
 
-            Debug.Log("[CoralPlantArea] 已种完所有珊瑚，胜利！");
+            Debug.Log("[CoralPlantArea] All corals have been planted. Victory!");
         }
     }
 }

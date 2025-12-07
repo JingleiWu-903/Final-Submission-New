@@ -2,15 +2,15 @@
 
 public class CoralPlantSlot : MonoBehaviour
 {
-    [Header("ItemData 配置")]
-    public ItemData coralItem;          // 一般和 Area 里的 coralItem 一样
+    [Header("ItemData Configuration")]
+    public ItemData coralItem;          //Just like the coralItem in Area
 
-    [Header("两个子物体")]
-    public GameObject greyCoral;        // 灰白占位
-    public GameObject realCoral;        // 真正的珊瑚
+    [Header("Two sub-objects")]
+    public GameObject greyCoral;        // Grayish-white placeholder
+    public GameObject realCoral;        // True coral
 
     [HideInInspector]
-    public bool isPlanted = false;      // 是否已经种植
+    public bool isPlanted = false;      // Has it been planted yet
 
     private CoralPlantArea area;
 
@@ -24,7 +24,7 @@ public class CoralPlantSlot : MonoBehaviour
         area = a;
     }
 
-    // ✅ 由 CoralPlantArea 调用：真正执行“种植”
+    // Called by CoralPlantArea: The actual execution of "planting"
     public void Plant()
     {
         if (isPlanted) return;
@@ -37,10 +37,10 @@ public class CoralPlantSlot : MonoBehaviour
             area.NotifyPlanted(this);
         }
 
-        Debug.Log("在格子 " + name + " 种了一颗珊瑚");
+        Debug.Log("A coral was planted in the grid " + name + ".");
     }
 
-    // 刷新灰/真珊瑚的显隐
+    // Refresh the visibility of the gray/real coral
     public void RefreshVisual()
     {
         if (greyCoral != null)

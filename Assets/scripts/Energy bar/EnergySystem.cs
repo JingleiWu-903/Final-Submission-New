@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;  // 使用 Slider
+using UnityEngine.UI;  // Use the Slider
 
 
 public class EnergySystem : MonoBehaviour
 {
     [Header("能量设置")]
-    public Slider energySlider;        // 能量条
-    public int energy = 0;             // 当前能量（0~3）
-    public int maxEnergy = 3;          // 最大能量 = 3（捡3次垃圾）
+    public Slider energySlider;        // energybar
+    public int energy = 0;             // Current energy (0 - 3)
+    public int maxEnergy = 3;          // Maximum energy = 3 (pick up 3 pieces of trash)
 
     [Header("UI 与预制体")]
-    public GameObject energyFullPanel; // 能量满时的提示UI
-    public GameObject energyBallPrefab;// 能量球预制体
-    public Transform player;           // 玩家 Transform
+    public GameObject energyFullPanel; // UI prompt when energy is full
+    public GameObject energyBallPrefab;// Energy ball prefabricated body
+    public Transform player;           // Player Transform
 
     [Header("能量球发射参数")]
-    public float shootForce = 7f;      // 初速度
-    public float upwardFactor = 0.05f;  // 向上抬头的比例
+    public float shootForce = 7f;      // initial velocity
+    public float upwardFactor = 0.05f;  // The proportion of looking up
 
     private void Start()
     {
-        // 把 Slider 设置成 0~3 的整格
+        // Set the Slider to integer values ranging from 0 to 3
         if (energySlider != null)
         {
             energySlider.minValue = 0;
@@ -35,10 +35,10 @@ public class EnergySystem : MonoBehaviour
         Debug.Log("Initial Energy: " + energy);
     }
 
-    // 每捡一次垃圾 +1 格能量
+    // +1 energy for each piece of trash picked up
     public void AddEnergy(int amount)
     {
-        // 已经满了就不要再加（保持 3 格）
+        // Don't add any more when it's full (keep three grids)
         if (energy >= maxEnergy)
             return;
 
@@ -51,7 +51,7 @@ public class EnergySystem : MonoBehaviour
 
         Debug.Log("Current Energy: " + energy);
 
-        // 满电后弹出提示 UI
+        // A prompt UI pops up when fully charged
         if (energy >= maxEnergy && energyFullPanel != null)
         {
             energyFullPanel.SetActive(true);
@@ -60,30 +60,30 @@ public class EnergySystem : MonoBehaviour
 
     private void Update()
     {
-        // ⚠ 不再把 energy 重置为 0，只要能量 >= maxEnergy 就可以无限按 E 发射
+        //No longer reset energy to 0. As long as energy is greater than or equal to maxEnergy, you can press E to fire infinitely
         if (energy >= maxEnergy && Input.GetKeyDown(KeyCode.E))
         {
             FireEnergyBall();
         }
     }
 
-    // 关闭“能量已满”提示（给按钮用）
+    // Turn off the "Energy is full" prompt
     public void CloseEnergyFullPanel()
     {
         if (energyFullPanel != null)
             energyFullPanel.SetActive(false);
     }
 
-    // 发射能量球（带抛物线）
+    //Launch energy balls
     private void FireEnergyBall()
     {
         if (energyBallPrefab == null || player == null)
         {
-            Debug.LogWarning("EnergyBallPrefab 或 player 没有设置！");
+            Debug.LogWarning("EnergyBallPrefab or player is not set!");
             return;
         }
 
-        // 在玩家前方一点 + 稍微抬高的位置生成
+        // Generate at a slightly elevated position a little ahead of the player
         Vector3 spawnPos = player.position + player.forward * 1.0f + Vector3.up * 0.5f;
         GameObject energyBall = Instantiate(energyBallPrefab, spawnPos, Quaternion.identity);
 
@@ -91,9 +91,9 @@ public class EnergySystem : MonoBehaviour
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
-            rb.useGravity = true; // 记得在预制体上也勾上 Use Gravity
+            rb.useGravity = true;
 
-            // 发射方向：前方 + 少量向上
+            // Launch direction: Forward + slightly upward
             Vector3 dir = (player.forward + Vector3.up * upwardFactor).normalized;
             rb.AddForce(dir * shootForce, ForceMode.VelocityChange);
         }

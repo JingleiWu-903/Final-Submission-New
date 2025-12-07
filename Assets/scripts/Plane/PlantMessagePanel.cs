@@ -16,7 +16,7 @@ public class PlantMessagePanel : MonoBehaviour
         if (canvasGroup == null)
             canvasGroup = GetComponent<CanvasGroup>();
 
-        // 确保物体是激活的，用 alpha 控制可见性
+        // Make sure the object is active and use alpha to control its visibility
         gameObject.SetActive(true);
         HideInstant();
     }
@@ -35,7 +35,7 @@ public class PlantMessagePanel : MonoBehaviour
     {
         if (canvasGroup == null) return;
 
-        // 确保物体是激活状态
+        // Make sure the object is in an active state
         if (!gameObject.activeSelf)
             gameObject.SetActive(true);
 
@@ -53,7 +53,7 @@ public class PlantMessagePanel : MonoBehaviour
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
-        // 渐显
+        //fade in
         float t = 0f;
         while (t < fadeTime)
         {
@@ -64,10 +64,10 @@ public class PlantMessagePanel : MonoBehaviour
 
         canvasGroup.alpha = 1f;
 
-        // 停留一段时间
+        // Stay for a while
         yield return new WaitForSeconds(showTime);
 
-        // 渐隐
+        // fade-out
         t = 0f;
         while (t < fadeTime)
         {

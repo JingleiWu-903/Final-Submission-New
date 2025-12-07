@@ -3,14 +3,14 @@ using TMPro;
 
 public class PlantAreaUIView : MonoBehaviour
 {
-    public Transform target;                       // 一般拖 CoralPlantArea
+    public Transform target;                       // use CoralPlantArea
     public Vector3 worldOffset = new Vector3(0, 3f, 0);
     public Vector2 screenOffset = Vector2.zero;
-    public TextMeshProUGUI progressText;           // 0/9 文字
+    public TextMeshProUGUI progressText;           // 0/9 text
 
-    [Header("上下浮动效果")]
-    public float floatAmplitude = 0.3f;            // 浮动高度
-    public float floatSpeed = 1.0f;                // 浮动速度
+    [Header("Up and down floating effect")]
+    public float floatAmplitude = 0.3f;            // flying height
+    public float floatSpeed = 1.0f;                // flying speed
 
     private Camera cam;
 
@@ -41,7 +41,7 @@ public class PlantAreaUIView : MonoBehaviour
     {
         if (target == null || cam == null) return;
 
-        // 计算上下浮动的偏移
+        // Calculate the offset of the upper and lower fluctuations
         float hover = Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
 
         Vector3 worldPos = target.position + worldOffset + new Vector3(0, hover, 0);
