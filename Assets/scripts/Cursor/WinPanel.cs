@@ -10,7 +10,7 @@ public class WinPanel : MonoBehaviour
             cursor = FindObjectOfType<CursorManager>();
 
         if (cursor != null)
-            cursor.UnlockCursor();   // 显示鼠标
+            cursor.UnlockCursor();   // Show mouse
     }
 
     private void OnDisable()
@@ -19,6 +19,6 @@ public class WinPanel : MonoBehaviour
             cursor = FindObjectOfType<CursorManager>();
 
         if (cursor != null)
-            cursor.LockCursor();     // 恢复视角模式
+            cursor.LockCursor();     // Restore perspective mode
     }
 }

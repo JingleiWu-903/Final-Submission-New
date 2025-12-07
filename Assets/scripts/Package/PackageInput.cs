@@ -18,13 +18,13 @@ public class PackageInput : MonoBehaviour
             if (panel.gameObject.activeSelf)
             {
                 panel.gameObject.SetActive(false);
-                cursor.LockCursor();     // 关闭背包 → 视角恢复
+                cursor.LockCursor();     // Turn off the backpack //view restoration
             }
             else
             {
                 panel.gameObject.SetActive(true);
                 CursorManager.Instance.UnlockCursor();
-                // 打开背包 → 鼠标自由
+                // Open the backpack // the mouse freely
             }
         }
     }

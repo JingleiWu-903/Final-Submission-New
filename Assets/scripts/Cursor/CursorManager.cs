@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
-    public static CursorManager Instance;   // 单例（给其他脚本调用）
+    public static CursorManager Instance;  
 
-    [Header("自定义鼠标图片（PNG）")]
-    public Texture2D cursorTexture;   // ★ 把你设计的鼠标图片拖进来即可
+    [Header("Custom mouse picture（PNG）")]
+    public Texture2D cursorTexture;   
 
     private bool isLocked = true;
 
     private void Awake()
     {
-        // 单例初始化
+        // Singleton initialization
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -24,12 +24,10 @@ public class CursorManager : MonoBehaviour
 
     private void Start()
     {
-        LockCursor();  // 游戏开始默认锁定鼠标
+        LockCursor();  // locking mouse by default when the game starts
     }
 
-    // --------------------------------
-    //         对外公开方法
-    // --------------------------------
+  
 
     public void UnlockCursor()
     {
@@ -37,7 +35,7 @@ public class CursorManager : MonoBehaviour
         Cursor.visible = true;
         isLocked = false;
 
-        // ★ 设置自定义鼠标（无 hotspot）
+        //  Set up a custom mouse (no hotspot)
         if (cursorTexture != null)
         {
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
@@ -50,7 +48,7 @@ public class CursorManager : MonoBehaviour
         Cursor.visible = false;
         isLocked = true;
 
-        // ★ 隐藏时重置为默认（避免残影）
+        // Reset to default when hidden (to avoid ghosting)
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 

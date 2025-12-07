@@ -4,17 +4,17 @@ public class NetTrap : MonoBehaviour
 {
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("🚨 OnTriggerExit 被触发：" + other.name);
+        Debug.Log("OnTriggerExit is triggered：" + other.name);
 
         FishEscape fish = other.GetComponent<FishEscape>();
         if (fish != null)
         {
-            Debug.Log("🐟 找到了 FishEscape，开始逃跑！");
+            Debug.Log("FishEscape is found and starts to escape");
             fish.StartEscape();
         }
         else
         {
-            Debug.Log("⚠ OnTriggerExit 触发了，但对象不是鱼：" + other.name);
+            Debug.Log("OnTriggerExit triggered, but the object was not a fish：" + other.name);
         }
     }
 

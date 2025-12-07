@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemPickup : MonoBehaviour
 {
-    public ItemData data;  // 物品数据
+    public ItemData data;  
 
     private bool canBePicked = false;
     public GameObject netTrapArea;
@@ -19,15 +19,15 @@ public class ItemPickup : MonoBehaviour
         canBePicked = true;
     }
 
-    // ----------- 对外开放可调用的拾取函数 -----------
+    // Open up callable pickup functions to the public
     public void Pickup()
     {
         if (!canBePicked) return;
 
-        Debug.Log("<color=yellow>Pickup() 被调用: " + gameObject.name + "</color>");
-        Debug.Log("🎯 正在被点击的网实例是：" + gameObject.name, gameObject);
+        Debug.Log("<color=yellow>Pickup() is called: " + gameObject.name + "</color>");
+        Debug.Log("The Net instance being clicked is：" + gameObject.name, gameObject);
 
-        // 如果是垃圾 → 加能量段
+        // If it's the garbage plus energy section
         if (data.itemType == ItemData.ItemType.Trash)
         {
             var energySystem = FindFirstObjectByType<EnergySystem>();
@@ -37,28 +37,28 @@ public class ItemPickup : MonoBehaviour
             }
         }
 
-        // 加入背包
+        // Add to backpack
         PackageData.Instance.AddItem(data);
 
-        // 刷新UI
+        // refresh UI
         var panel = FindFirstObjectByType<PackagePanel>();
         if (panel != null)
         {
             panel.RefreshScroll();
         }
 
-        // 必须先移动 NetTrapArea（触发 OnTriggerExit）
+        // move NetTrapArea firstly （Trigger OnTriggerExit）
         if (netTrapArea != null)
         {
-            Debug.Log("📌 移动 Trigger 前：" + netTrapArea.transform.position);
-            netTrapArea.transform.position += Vector3.up * 10f;   // 抬高触发区，使鱼触发Exit
-            Debug.Log("📌 移动 Trigger 后：" + netTrapArea.transform.position);
+            Debug.Log("Before move Trigger：" + netTrapArea.transform.position);
+            netTrapArea.transform.position += Vector3.up * 10f;   // Raise the trigger area so that the fish triggers Exit
+            Debug.Log("After move Trigger：" + netTrapArea.transform.position);
         }
 
-        // 延迟隐藏网（如果立即隐藏，Trigger 会消失，Exit 不会触发）
+        // Delayed hidden net (if hidden immediately, Trigger will disappear and Exit will not trigger)
         StartCoroutine(HideNetAfterDelay(0.1f));
 
-        Debug.Log("<color=green>拾取成功：" + data.itemName + "</color>");
+        Debug.Log("<color=green>Picked up successfully：" + data.itemName + "</color>");
     }
 
     private IEnumerator HideNetAfterDelay(float t)
@@ -67,9 +67,9 @@ public class ItemPickup : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // ----------- 鼠标点击（Unity 自动调用）------------
+    // Mouse click (automatically called by Unity)
     private void OnMouseDown()
     {
-        Pickup(); // 点击直接调用
+        Pickup(); // Click to call directly
     }
 }

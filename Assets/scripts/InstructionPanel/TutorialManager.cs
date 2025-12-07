@@ -3,16 +3,16 @@
 public class TutorialManager : MonoBehaviour
 {
     [Header("UI Panels")]
-    public GameObject tip_I;      // “按 I” 提示
-    public GameObject tip_Tab;    // “按 Tab” 提示
+    public GameObject tip_I;      // TIP-"press I” 
+    public GameObject tip_Tab;    // TIP-“press Tab”
 
     [Header("References")]
     public InstructionPanelController instructionPanel;
     public PackageInput packageInput;
 
-    private bool hasOpenedInstruction = false;   // 是否第一次按过 I
-    private bool hasFinishedInstruction = false; // 是否已经关闭过介绍 panel
-    private bool hasOpenedBag = false;           // 是否按过 Tab
+    private bool hasOpenedInstruction = false;   // Whether pressed I for the first time
+    private bool hasFinishedInstruction = false; // Has the introduction panel been closed yet
+    private bool hasOpenedBag = false;           // Whether press Tab
 
     void Start()
     {
@@ -22,12 +22,12 @@ public class TutorialManager : MonoBehaviour
 
     void Update()
     {
-        // ----------- 玩家按 I 键：打开/关闭介绍面板（无限次可触发） -----------
+        // presses "I" Open/Close the introduction panel // can be triggered unlimited times
         if (Input.GetKeyDown(KeyCode.I))
         {
             instructionPanel.ToggleInstruction();
 
-            // 第一次按 I 才隐藏提示
+            // Press " I " for the first time to hide the prompt
             if (!hasOpenedInstruction)
             {
                 tip_I.SetActive(false);
@@ -37,14 +37,14 @@ public class TutorialManager : MonoBehaviour
             return;
         }
 
-        // ----------- 玩家关闭介绍面板后：显示 Tab 提示（只触发一次） ----------
+        // Show "press tab " After the intro panel is closed
         if (hasOpenedInstruction && !instructionPanel.IsOpen && !hasFinishedInstruction)
         {
             hasFinishedInstruction = true;
             tip_Tab.SetActive(true);
         }
 
-        // ----------- 玩家按 Tab：打开背包 ----------- 
+        // "press'tab：opens backpack
         if (!hasOpenedBag && Input.GetKeyDown(KeyCode.Tab))
         {
             if (packageInput != null)

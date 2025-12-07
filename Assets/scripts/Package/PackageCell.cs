@@ -11,7 +11,7 @@ public class PackageCell : MonoBehaviour, IPointerClickHandler
     private ItemData myData;
     private PackagePanel panel;
 
-    // 初始化格子内容
+    // Initialize grid content
     public void Setup(ItemData data, PackagePanel parent)
     {
         myData = data;
@@ -20,7 +20,7 @@ public class PackageCell : MonoBehaviour, IPointerClickHandler
         iconImage.sprite = data.icon;
         nameText.text = data.itemName;
     }
-    // 点击格子：通知 PackagePanel 显示详情
+    // Click on the grid: Notify PackagePanel to display details
     public void OnPointerClick(PointerEventData eventData)
     {
         panel.ShowDetail(myData);

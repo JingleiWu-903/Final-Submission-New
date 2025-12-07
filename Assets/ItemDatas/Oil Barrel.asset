@@ -19,5 +19,6 @@ MonoBehaviour:
     The oil forms a suffocating layer over corals, blocking sunlight and oxygen.
     It also disrupts water clarity and harms fish, algae, and other organisms within
     the reef ecosystem.
-  videoPath: 
+  videoClip: {fileID: 0}
+  imagePreview: {fileID: 21300000, guid: 80750223e3f30614dafc17126fa9d438, type: 3}
   worldPrefab: {fileID: 0}

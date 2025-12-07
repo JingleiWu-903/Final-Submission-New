@@ -6,7 +6,7 @@ public class ClickSound : MonoBehaviour
 
     void Update()
     {
-        // 鼠标左键按下时播放点击音效
+        // Play a click sound when the left mouse button is pressed
         if (Input.GetMouseButtonDown(0))
         {
             audioSource.Play();

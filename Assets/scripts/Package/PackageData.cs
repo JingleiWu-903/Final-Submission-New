@@ -22,16 +22,16 @@ public class PackageData : MonoBehaviour
     public void AddItem(ItemData item)
     {
         items.Add(item);
-        Debug.Log("拾取成功：" + item.itemName);
+        Debug.Log("Picked up successfully：" + item.itemName);
     }
 
     public void RemoveItem(ItemData item)
     {
         items.Remove(item);
-        Debug.Log("删除物品：" + item.itemName);
+        Debug.Log("Delete items：" + item.itemName);
     }
 
-    // ✅ 是否有某个物品
+    // Whether there is an item
     public bool HasItem(ItemData item)
     {
         foreach (var i in items)
@@ -41,7 +41,7 @@ public class PackageData : MonoBehaviour
         return false;
     }
 
-    // ✅ 消耗一个物品（种植用）
+    // Consume an item (for planting)
     public bool ConsumeItem(ItemData item)
     {
         for (int i = 0; i < items.Count; i++)
@@ -49,7 +49,7 @@ public class PackageData : MonoBehaviour
             if (items[i] == item)
             {
                 items.RemoveAt(i);
-                Debug.Log("消耗物品：" + item.itemName);
+                Debug.Log("Consume：" + item.itemName);
                 return true;
             }
         }

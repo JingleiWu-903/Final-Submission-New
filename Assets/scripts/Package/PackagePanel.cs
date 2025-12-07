@@ -77,9 +77,7 @@ public class PackagePanel : MonoBehaviour
             videoPlayer.Stop();
     }
 
-    // --------------------------
-    // 删除（丢弃）物品
-    // --------------------------
+    // Delete items
     public void DeleteCurrentItem()
     {
         if (currentItem == null) return;
@@ -89,13 +87,13 @@ public class PackagePanel : MonoBehaviour
         Transform player = GameObject.FindWithTag("Player").transform;
         Vector3 spawn = player.position + player.forward * 2 + Vector3.up * 2f;
 
-        Debug.Log("<color=yellow>丢弃生成位置：" + spawn + "</color>");
+        Debug.Log("<color=yellow>location：" + spawn + "</color>");
 
         if (currentItem.worldPrefab != null)
         {
             GameObject obj = Instantiate(currentItem.worldPrefab, spawn, Quaternion.identity);
 
-            Debug.Log("<color=green>生成了物体：" + obj.name + "</color>");
+            Debug.Log("<color=green>An object was generated.：" + obj.name + "</color>");
 
             if (obj.GetComponent<ItemPickup>() == null)
                 obj.AddComponent<ItemPickup>().data = currentItem;
@@ -137,17 +135,44 @@ public class PackagePanel : MonoBehaviour
         infoPage.SetActive(false);
         videoPage.SetActive(true);
 
-        if (currentItem != null && videoPlayer != null)
+        // Clear old pictures
+        videoPlayer.Stop();
+        videoRawImage.texture = null;
+
+        if (currentItem == null)
         {
-            if (currentItem.videoClip != null)
-            {
-                videoPlayer.clip = currentItem.videoClip;  // ← 不用路径，直接用 VideoClip
-                videoPlayer.Play();
-            }
-            else
-            {
-                Debug.LogWarning("当前物品没有视频视频（videoClip 未设置）");
-            }
+            Debug.LogWarning("currentItem empty");
+            return;
         }
+
+
+        // Check the video first
+
+        if (currentItem.videoClip != null)
+        {
+            videoPlayer.clip = currentItem.videoClip;
+            videoPlayer.Play();
+            StartCoroutine(WaitAndSetTexture());
+            return;
+        }
+
+
+        // without video - check the pictures
+        if (currentItem.imagePreview != null)
+        {
+            // Sprite → Texture2D
+            videoRawImage.texture = currentItem.imagePreview.texture;
+            return;
+        }
+
+        // without all- tips
+        Debug.LogWarning("no video or picture for the current item.");
     }
+
+    private System.Collections.IEnumerator WaitAndSetTexture()
+    {
+        yield return new WaitForSeconds(0.1f);
+        videoRawImage.texture = videoPlayer.texture;
+    }
+
 }

@@ -3,16 +3,14 @@ using UnityEngine;
 public class FloatEffect : MonoBehaviour
 {
     [Header("Floating Settings")]
-    public float floatAmplitude = 0.1f; // 上下浮动幅度
-    public float floatFrequency = 1f;   // 浮动速度
+    public float floatAmplitude = 0.1f; // Upward and downward floating range
+    public float floatFrequency = 1f;   //floating speed
 
     [Header("Rotation Settings")]
-    public float rotateAmplitude = 5f;  // 旋转角度幅度
-    public float rotateFrequency = 1f;  // 旋转速度
-
+    public float rotateAmplitude = 5f;  // Rotation angle
+    public float rotateFrequency = 1f;  // Rotation speed
     private Vector3 startPos;
     private Quaternion startRot;
-
     private float randomOffsetPos;
     private float randomOffsetRot;
 
@@ -31,14 +29,14 @@ public class FloatEffect : MonoBehaviour
 
         startRot = transform.localRotation;
 
-        // 随机相位：每个漂浮物从不同位置开始
+        // starts from a different position
         randomOffsetPos = Random.Range(0f, Mathf.PI * 2f);
         randomOffsetRot = Random.Range(0f, Mathf.PI * 2f);
     }
 
     void Update()
     {
-        // --- 上下浮动 ---
+        //Float up and down 
         float floatOffset = Mathf.Sin(Time.time * floatFrequency + randomOffsetPos) * floatAmplitude;
 
         if (isUI)
@@ -46,7 +44,7 @@ public class FloatEffect : MonoBehaviour
         else
             transform.localPosition = startPos + new Vector3(0, floatOffset, 0);
 
-        // --- 轻微旋转（Z轴）---
+        //Slight rotation (Z) 
         float rotateZ = Mathf.Sin(Time.time * rotateFrequency + randomOffsetRot) * rotateAmplitude;
         transform.localRotation = startRot * Quaternion.Euler(0, 0, rotateZ);
     }

@@ -4,7 +4,7 @@ public class UnlockCursor : MonoBehaviour
 {
     void Start()
     {
-        Cursor.lockState = CursorLockMode.None;   // 解锁鼠标
-        Cursor.visible = true;                   // 让鼠标可见
+        Cursor.lockState = CursorLockMode.None;   // unlock mouse
+        Cursor.visible = true;                   // Make mouse visible
     }
 }

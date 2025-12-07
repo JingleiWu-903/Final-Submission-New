@@ -22,14 +22,14 @@ public class InstructionPanelController : MonoBehaviour
 
     void Awake()
     {
-        // 面板默认关闭
+        // Panel is closed by default
         if (instructionPanel != null)
             instructionPanel.SetActive(false);
     }
 
     void OnEnable()
     {
-        // 保证按钮监听永远绑定成功
+        // Ensure that the button is always bound successfully
         if (leftButton != null)
         {
             leftButton.onClick.RemoveAllListeners();
@@ -62,7 +62,7 @@ public class InstructionPanelController : MonoBehaviour
         {
             CursorManager.Instance.UnlockCursor();
 
-            // 每次打开时回到第一页
+            // Go back to the first page every time  open it
             currentPage = 0;
             ShowPage(currentPage);
             instructionPanel.SetActive(true);

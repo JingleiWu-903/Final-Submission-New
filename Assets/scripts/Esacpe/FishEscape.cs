@@ -9,33 +9,28 @@ public class FishEscape : MonoBehaviour
     public float escapeUpDuration = 0.6f;
     public float escapeSpeed = 3f;
     public float escapeTime = 2f;
-
     private bool hasEscaped = false;
 
     void Start()
     {
-        // 初始状态 = 被压住（播放挣扎动画 Attack）
+        // Initial state: pinned (play struggling animation Attack)
         animator.SetBool("IsFree", false);
     }
 
     public void StartEscape()
     {
-        Debug.Log("🐟 StartEscape() 被调用！！");
-
+        Debug.Log("Fish StartEscape() is Uesd");
         if (hasEscaped) return;
-
         hasEscaped = true;
         animator.SetBool("IsFree", true);
-
-        Debug.Log("🐟 IsFree 已设置为 true");
-
+        Debug.Log("Fish IsFree is set to true");
         StartCoroutine(EscapeRoutine());
     }
 
 
     private IEnumerator EscapeRoutine()
     {
-        // Step 1：向上游
+        // Step 1：upstream
         Vector3 startPos = transform.position;
         Vector3 targetPos = startPos + Vector3.up * escapeUpDistance;
 
@@ -47,9 +42,9 @@ public class FishEscape : MonoBehaviour
             yield return null;
         }
 
-        // Step 2：快速游走（随机方向）
+        // Step 2：Fast walking (random direction)
         Vector3 dir = Random.onUnitSphere;
-        dir.y = Mathf.Abs(dir.y); // 确保向上或平移
+        dir.y = Mathf.Abs(dir.y); // Make sure to move upwards or horizontally
         dir.Normalize();
 
         float timer = 0;
@@ -60,7 +55,7 @@ public class FishEscape : MonoBehaviour
             yield return null;
         }
 
-        // Step 3：逃跑后消失
+        // Step 3：disappear after escaping
         Destroy(gameObject);
     }
 

@@ -20,5 +20,5 @@ MonoBehaviour:
     creates micro-habitats for small reef creatures and adds important vertical complexity
     to coral ecosystems.
   videoClip: {fileID: 0}
-  imagePreview: {fileID: 21300000, guid: c39679d739d72da4796c58a3bdb4af0a, type: 3}
+  imagePreview: {fileID: 21300000, guid: 46c69be1af2d5f04cb0b17d0e50208e0, type: 3}
   worldPrefab: {fileID: 0}
